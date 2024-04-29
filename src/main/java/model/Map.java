@@ -4,45 +4,82 @@ import java.util.ArrayList;
 import java.util.List;
 
 import observer.Observable;
+import util.Vector2D;
 
 public class Map {
+    private Vector2D size;
+    private List<Robot> robots;
     private List<Obstacle> obstacles;
-    private float width;
-    private float height;
-    private Observable observable; // Composition
 
     public Map() {
-        obstacles = new ArrayList<>();
-        observable = new Observable(); // Initialize Observable
-        // Initialize width and height as needed
-        width = 0;  // Placeholder value
-        height = 0; // Placeholder value
+        this.size = new Vector2D(0, 0);
+        this.robots = new ArrayList<>();
+        this.obstacles = new ArrayList<>();
     }
 
-    public void addObstacle(Obstacle obstacle) {
-        obstacles.add(obstacle);
-        // Notify observers about the change in the map
-        notifyObservers();
+    public Map(double x, double y) {
+        this.size = new Vector2D(x, y);
+        this.robots = new ArrayList<>();
+        this.obstacles = new ArrayList<>();
     }
 
-    public void clearObstacles() {
-        obstacles.clear();
+    public Map(Vector2D size) {
+        this.size = size;
+        this.robots = new ArrayList<>();
+        this.obstacles = new ArrayList<>();
+    }
+
+    public void setSize(Vector2D size) {
+        this.size = size;
+    }
+
+    public void setSize(double x, double y) {
+        this.size = new Vector2D(x, y);
+    }
+
+    public void setRobots(List<Robot> newRobots) {
+        this.robots = newRobots;
+    }
+
+    public void setObstacles(List<Obstacle> newObstacles) {
+        this.obstacles = newObstacles;
+    }
+
+    public List<Robot> getRobots() {
+        return robots;
     }
 
     public List<Obstacle> getObstacles() {
         return obstacles;
     }
 
-    public float getWidth() {
-        return width;
+    public void addRobot(Robot newRobot) {
+        robots.add(newRobot);
     }
 
-    public float getHeight() {
-        return height;
+    public void addObstacle(Obstacle newObstacle) {
+        obstacles.add(newObstacle);
     }
 
-    // Trigger notification when changes occur
-    private void notifyObservers() {
-        observable.notifyObservers();
+    public Vector2D getSize() {
+        return size;
+    }
+
+    public void moveRobot(Vector2D oldPos, Vector2D newPos) {
+        for (Robot robot : robots) {
+            if (robot.getPos().equals(oldPos)) {
+                robot.setPos(newPos);
+                return;
+            }
+        }
+    }
+
+    public void moveObstacle(Vector2D oldPos, Vector2D newPos) {
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle.getPos().equals(oldPos)) {
+                obstacle.setPos(newPos);
+                return;
+            }
+        }
     }
 }

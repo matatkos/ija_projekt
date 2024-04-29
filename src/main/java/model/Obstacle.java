@@ -1,38 +1,24 @@
 package model;
 
+import util.Vector2D;
+
 public class Obstacle {
-    private float x;
-    private float y;
-    private float width;
-    private float height;
-    private float rotation;
+    private Vector2D pos;
 
-    public Obstacle(float x, float y, float width, float height, float rotation) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.rotation = rotation;
+    public Obstacle(Vector2D pos) {
+        this.pos = pos;
     }
 
-    public float getX() {
-        return x;
+    public Obstacle(double x, double y) {
+        this.pos = new Vector2D(x, y);
     }
 
-    public float getY() {
-        return y;
+    public Vector2D getPos() {
+        return pos;
     }
 
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public float getRotation() {
-        return rotation;
+    public void setPos(Vector2D newPos) {
+        this.pos = newPos;
     }
 }
 
