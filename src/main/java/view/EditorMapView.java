@@ -5,9 +5,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.input.MouseEvent;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.function.Consumer;
 
 import model.Robot;
 import model.Obstacle;
@@ -15,15 +17,18 @@ import util.Vector2D;
 
 public class EditorMapView extends Pane {
     private static final Logger LOGGER = Logger.getLogger(EditorMapView.class.getName());
+    private DecimalFormat f = new DecimalFormat("##.00");
+
     private String placementMode = "Robot";
     private String mode = "Placement Mode";
-    private Map<Circle, Robot> robots = new HashMap<>();
-    private Map<Rectangle, Obstacle> obstacles = new HashMap<>();
+    Map<Circle, Robot> robots = new HashMap<>();
+    Map<Rectangle, Obstacle> obstacles = new HashMap<>();
     private Object selectedItem;
     private double initialMouseX, initialMouseY;
+    private Consumer<Robot> robotClickListener; // Listener for robot clicks
 
     public EditorMapView() {
-        setPrefSize(800, 600); // This sets the preferred size of the editor map view
+        setPrefSize(800, 600);
         this.setOnMousePressed(this::handleMousePressed);
         this.setOnMouseReleased(this::handleMouseReleased);
     }
@@ -34,10 +39,10 @@ public class EditorMapView extends Pane {
 
         if (mode.equals("Placement Mode")) {
             if (placementMode.equals("Robot")) {
-                LOGGER.info("Added a robot to position " + x + " " + y);
+                LOGGER.info("Attempting to add a robot at position (" + f.format(x) + "; " + f.format(y) + ")");
                 addRobotAtPosition(x, y);
             } else if (placementMode.equals("Obstacle")) {
-                LOGGER.info("Added an obstacle to position " + x + " " + y);
+                LOGGER.info("Attempting to add an obstacle at position (" + f.format(x) + "; " + f.format(y) + ")");
                 addObstacleAtPosition(x, y);
             }
         } else if (mode.equals("Editing Mode")) {
@@ -60,34 +65,45 @@ public class EditorMapView extends Pane {
     }
 
     private void addRobotAtPosition(double x, double y) {
-        if (!checkOverlap(x, y)) {
-            Circle circle = new Circle(10); // Radius of 10
-            circle.setCenterX(x);
-            circle.setCenterY(y);
+        if (!checkOverlap(x, y, 10)) { // 10 is the radius of the robot
+            Circle circle = new Circle(x, y, 10);
             circle.setFill(Color.BLUE);
             getChildren().add(circle);
-            robots.put(circle, new Robot(new Vector2D(x, y))); // Assuming a constructor accepting a Vector2D
+            Robot robot = new Robot(new Vector2D(x, y));
+            robots.put(circle, robot);
+            circle.setOnMouseClicked(e -> {
+                if (robotClickListener != null) {
+                    robotClickListener.accept(robot);
+                }
+                e.consume();  // Prevent the event from propagating to lower layers
+            });
+        } else {
+            LOGGER.warning("Failed to add robot due to overlap at position (" + x + ", " + y + ")");
         }
     }
 
     private void addObstacleAtPosition(double x, double y) {
-        if (!checkOverlap(x, y)) {
-            Rectangle rectangle = new Rectangle(x - 10, y - 10, 20, 20); // Width and height of 20
+        if (!checkOverlap(x, y, 10)) { // Assuming obstacles are roughly circular for simplicity
+            Rectangle rectangle = new Rectangle(x - 10, y - 10, 20, 20);
             rectangle.setFill(Color.GRAY);
             getChildren().add(rectangle);
-            obstacles.put(rectangle, new Obstacle(new Vector2D(x, y))); // Assuming a constructor accepting a Vector2D
+            Obstacle obstacle = new Obstacle(new Vector2D(x, y));
+            obstacles.put(rectangle, obstacle);
+        } else {
+            LOGGER.warning("Failed to add obstacle due to overlap at position (" + x + ", " + y + ")");
         }
     }
 
-    private boolean checkOverlap(double x, double y) {
-        // This method checks for overlap with existing robots or obstacles
+    private boolean checkOverlap(double x, double y, double size) {
+        // Check for overlap with existing robots
         for (Circle circle : robots.keySet()) {
-            if (circle.contains(x, y)) {
+            if (circle.getBoundsInParent().intersects(x - size, y - size, size * 2, size * 2)) {
                 return true;
             }
         }
+        // Check for overlap with existing obstacles
         for (Rectangle rectangle : obstacles.keySet()) {
-            if (rectangle.contains(x, y)) {
+            if (rectangle.getBoundsInParent().intersects(x - size, y - size, size * 2, size * 2)) {
                 return true;
             }
         }
@@ -107,14 +123,22 @@ public class EditorMapView extends Pane {
     private void moveItem(double dx, double dy) {
         if (selectedItem instanceof Circle) {
             Circle circle = (Circle) selectedItem;
-            circle.setCenterX(circle.getCenterX() + dx);
-            circle.setCenterY(circle.getCenterY() + dy);
-            LOGGER.info("Moved robot to new position: x=" + circle.getCenterX() + ", y=" + circle.getCenterY());
+            double newX = circle.getCenterX() + dx;
+            double newY = circle.getCenterY() + dy;
+            if (!checkOverlap(newX, newY, circle.getRadius())) {
+                circle.setCenterX(newX);
+                circle.setCenterY(newY);
+                LOGGER.info("Moved robot to new position: (" + f.format(newX) + ", " + f.format(newY) + ")");
+            }
         } else if (selectedItem instanceof Rectangle) {
             Rectangle rectangle = (Rectangle) selectedItem;
-            rectangle.setX(rectangle.getX() + dx);
-            rectangle.setY(rectangle.getY() + dy);
-            LOGGER.info("Moved obstacle to new position: x=" + rectangle.getX() + ", y=" + rectangle.getY());
+            double newX = rectangle.getX() + dx;
+            double newY = rectangle.getY() + dy;
+            if (!checkOverlap(newX, newY, rectangle.getWidth() / 2)) {
+                rectangle.setX(newX);
+                rectangle.setY(newY);
+                LOGGER.info("Moved obstacle to new position: (" + f.format(newX) + ", " + f.format(newY) + ")");
+            }
         }
     }
 
@@ -128,26 +152,17 @@ public class EditorMapView extends Pane {
 
     private void setColorBack(Object item) {
         if (item instanceof Circle) {
-            Circle circle = (Circle) item;
-            circle.setFill(Color.BLUE);
+            ((Circle) item).setFill(Color.BLUE);
         } else if (item instanceof Rectangle) {
-            Rectangle rectangle = (Rectangle) item;
-            rectangle.setFill(Color.GRAY);
+            ((Rectangle) item).setFill(Color.GRAY);
         }
-    }
-
-    public void setEditMode(String mode) {
-        this.placementMode = mode;
     }
 
     public void setMode(String m) {
         this.mode = m;
     }
 
-    public Robot getSelectedRobot() {
-        if (selectedItem instanceof Circle) {
-            return robots.get(selectedItem);
-        }
-        return null;
+    public void setOnRobotClickListener(Consumer<Robot> listener) {
+        this.robotClickListener = listener;
     }
 }

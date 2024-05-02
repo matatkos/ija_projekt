@@ -111,14 +111,12 @@ public class SimulationDialog extends Application {
                             String[] parts = line.split("x");
                             double posX = Double.parseDouble(parts[0].trim());
                             double posY = Double.parseDouble(parts[1].trim());
-                            double dirX = Double.parseDouble(parts[2].trim());
-                            double dirY = Double.parseDouble(parts[3].trim());
-                            double angle = Double.parseDouble(parts[4].trim());
-                            double range = Double.parseDouble(parts[5].trim());
-                            boolean turningDirection = parts[6].trim().equals("Right");
+                            double dir = Double.parseDouble(parts[2].trim());
+                            double angle = Double.parseDouble(parts[3].trim());
+                            double range = Double.parseDouble(parts[4].trim());
+                            boolean turningDirection = parts[5].trim().equals("Right");
 
                             Vector2D pos = new Vector2D(posX, posY);
-                            Vector2D dir = new Vector2D(dirX, dirY);
                             RobotParams params = new RobotParams(dir, range, angle, turningDirection);
                             Robot robot = new Robot(params, pos);
                             robots.add(robot);

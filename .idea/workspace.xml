@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6434aab6-9043-4002-b532-c44546afddc2" name="Changes" comment="robot placement">
+    <list default="true" id="6434aab6-9043-4002-b532-c44546afddc2" name="Changes" comment="editor, logs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Robot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/RobotParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/RobotParams.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/EditorDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/EditorDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/EditorMapView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/EditorMapView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/SimulationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/SimulationDialog.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +91,14 @@
       <option name="project" value="LOCAL" />
       <updated>1714425842385</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="editor, logs">
+      <created>1714429323614</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1714429323614</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -98,6 +108,7 @@
     <MESSAGE value="view classes" />
     <MESSAGE value="model classes" />
     <MESSAGE value="robot placement" />
-    <option name="LAST_COMMIT_MESSAGE" value="robot placement" />
+    <MESSAGE value="editor, logs" />
+    <option name="LAST_COMMIT_MESSAGE" value="editor, logs" />
   </component>
 </project>

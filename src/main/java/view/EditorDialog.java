@@ -5,29 +5,36 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.logging.Logger;
 
+import model.Obstacle;
+import model.Robot;
 import model.RobotParams;
 import util.Vector2D;
 
 public class EditorDialog extends Application {
     private static final Logger LOGGER = Logger.getLogger(EditorDialog.class.getName());
+    DecimalFormat f = new DecimalFormat("##.00");
 
     private TextField robotDirectionInput, detectionRangeInput, turningAngleInput;
-    private ComboBox<String> modeBox, turningDirectionInput;
+    private ComboBox<String> turningDirectionInput, modeBox;
     private EditorMapView mapView;
     private Button btnSave, btnUpdateRobotParams;
     private RadioButton btnAddObstacle, btnAddRobot;
     private ToggleGroup placementToggle;
+    private Robot currentSelectedRobot; // Currently selected robot
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Map Editor");
 
-        mapView = new EditorMapView();
+        mapView = new EditorMapView();  // Assume this class is properly implemented
 
         btnSave = new Button("Save");
         btnAddObstacle = new RadioButton("Add Obstacle");
@@ -38,7 +45,15 @@ public class EditorDialog extends Application {
         modeBox.getItems().addAll("Placement Mode", "Editing Mode");
         modeBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             mapView.setMode(newVal);
+            if(newVal.equals("Placement Mode")) {
+                btnAddRobot.setSelected(true);
+                btnAddObstacle.setSelected(false);
+            } else {
+                btnAddObstacle.setSelected(true);
+                btnAddRobot.setSelected(false);
+            }
         });
+        modeBox.setValue("Placement Mode");
 
         turningDirectionInput = new ComboBox<>();
         turningDirectionInput.getItems().addAll("Left", "Right");
@@ -66,6 +81,8 @@ public class EditorDialog extends Application {
             }
         });
 
+        mapView.setOnRobotClickListener(this::selectRobot);
+
         GridPane robotParamsLayout = createRobotParamsLayout();
 
         VBox modeLayout = new VBox(10, new Label("Select Mode:"), modeBox, btnAddRobot, btnAddObstacle);
@@ -80,6 +97,9 @@ public class EditorDialog extends Application {
         Scene scene = new Scene(layout, 1200, 1000);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Set up robot click listener
+        mapView.setOnRobotClickListener(this::selectRobot);
     }
 
     private void setToolTips() {
@@ -100,7 +120,7 @@ public class EditorDialog extends Application {
         robotParamsLayout.add(turningDirectionInput, 1, 2);
         robotParamsLayout.add(new Label("Turning Angle:"), 0, 3);
         robotParamsLayout.add(turningAngleInput, 1, 3);
-        robotParamsLayout.add(btnUpdateRobotParams, 1, 4);
+        robotParamsLayout.add(btnUpdateRobotParams, 0, 4, 2, 1);
         return robotParamsLayout;
     }
 
@@ -111,7 +131,27 @@ public class EditorDialog extends Application {
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                writer.write("Map data saved."); // Placeholder for actual map data saving
+                // Export robots
+                writer.write("Robots:\n");
+                for (Circle circle : mapView.robots.keySet()) {
+                    Robot robot = mapView.robots.get(circle);
+                    Vector2D position = robot.getPos();
+                    RobotParams params = new RobotParams(robot.getDir(), robot.getDetectionRange(), robot.getRotationAngle(), robot.getTurningDirection());
+                    String turningDirectionStr = robot.getTurningDirection() ? "right" : "left";
+                    writer.write(f.format(position.getX()) + ";" + f.format(position.getY())
+                            + ";" + params.direction + ";" + params.rotationAngle + ";" + params.detectionRange + ";" + turningDirectionStr);
+                    writer.newLine();
+                }
+
+                // Export obstacles
+                writer.write("\nObstacles:\n");
+                for (Rectangle rectangle : mapView.obstacles.keySet()) {
+                    Obstacle obstacle = mapView.obstacles.get(rectangle);
+                    Vector2D position = obstacle.getPos();
+                    writer.write(f.format(position.getX()) + ";" + f.format(position.getY()));
+                    writer.newLine();
+                }
+
                 LOGGER.info("Map data exported to file.");
             } catch (IOException e) {
                 LOGGER.severe("Failed to save map data: " + e.getMessage());
@@ -120,18 +160,38 @@ public class EditorDialog extends Application {
     }
 
     private void updateRobotParams() {
-        if (mapView.getSelectedRobot() != null) {
-            double directionDegrees = Double.parseDouble(robotDirectionInput.getText());
-            Vector2D direction = new Vector2D(Math.cos(Math.toRadians(directionDegrees)),
-                    Math.sin(Math.toRadians(directionDegrees)));
+        if (currentSelectedRobot != null) {
+            double direction = Double.parseDouble(robotDirectionInput.getText());
             double detectionRange = Double.parseDouble(detectionRangeInput.getText());
             double turningAngle = Double.parseDouble(turningAngleInput.getText());
             boolean turningDirection = turningDirectionInput.getValue().equals("Right");
 
-            RobotParams params = new RobotParams(direction, detectionRange, turningAngle, turningDirection);
-            mapView.getSelectedRobot().updateParameters(params);
-            LOGGER.info("Robot parameters updated: Direction = " + directionDegrees + " degrees, Detection Range = " +
+            currentSelectedRobot.setDirection(direction);
+            currentSelectedRobot.setDetectionRange(detectionRange);
+            currentSelectedRobot.setRotationAngle(turningAngle);
+            currentSelectedRobot.setTurningDirection(turningDirection);
+
+            LOGGER.info("Robot parameters updated: Direction = " + direction + " degrees, Detection Range = " +
                     detectionRange + ", Turning Angle = " + turningAngle + ", Turning Direction = " + (turningDirection ? "Right" : "Left"));
+        }
+    }
+
+    private void selectRobot(Robot robot) {
+        currentSelectedRobot = robot;
+        updateInputFields();
+    }
+
+    private void updateInputFields() {
+        if (currentSelectedRobot != null) {
+            robotDirectionInput.setText(String.format("%.2f", currentSelectedRobot.getDir()));
+            detectionRangeInput.setText(String.format("%.2f", currentSelectedRobot.getDetectionRange()));
+            turningAngleInput.setText(String.format("%.2f", currentSelectedRobot.getRotationAngle()));
+            turningDirectionInput.setValue(currentSelectedRobot.getTurningDirection() ? "Right" : "Left");
+        } else {
+            robotDirectionInput.clear();
+            detectionRangeInput.clear();
+            turningAngleInput.clear();
+            turningDirectionInput.getSelectionModel().clearSelection();
         }
     }
 

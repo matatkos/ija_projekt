@@ -4,7 +4,7 @@ import util.Vector2D;
 
 public class Robot {
     private Vector2D pos;
-    private Vector2D dir;
+    private double dir;
     private double rotationAngle;
     private double detectionRange;
     private boolean turningDirection;
@@ -12,7 +12,7 @@ public class Robot {
 
     public Robot(Vector2D pos) {
         this.pos = pos;
-        this.dir = new Vector2D();
+        this.dir = 0;
     }
 
     public Robot(RobotParams params, Vector2D pos) {
@@ -27,7 +27,7 @@ public class Robot {
         return pos;
     }
 
-    public Vector2D getDir() {
+    public double getDir() {
         return dir;
     }
 
@@ -51,7 +51,7 @@ public class Robot {
         pos = newPos;
     }
 
-    public void setDirection(Vector2D newDir) {
+    public void setDirection(double newDir) {
         dir = newDir;
     }
 
@@ -64,18 +64,24 @@ public class Robot {
     }
 
     public Vector2D updatePos() {
-        return pos.add(dir.multiply(speed));
+        // Convert direction angle to radians
+        double radians = Math.toRadians(dir);
+        // Calculate new x and y components
+        double dx = Math.cos(radians) * speed;
+        double dy = Math.sin(radians) * speed;
+        // Update position
+        return new Vector2D(pos.x + dx, pos.y + dy);
     }
 
-    private void setRotationAngle(double newRotationAngle) {
+    public void setRotationAngle(double newRotationAngle) {
         rotationAngle = newRotationAngle;
     }
 
-    private void setDetectionRange(double newDetectionRange) {
+    public void setDetectionRange(double newDetectionRange) {
         detectionRange = newDetectionRange;
     }
 
-    private void setTurningDirection(boolean newTurningDirection) {
+    public void setTurningDirection(boolean newTurningDirection) {
         turningDirection = newTurningDirection;
     }
 }
