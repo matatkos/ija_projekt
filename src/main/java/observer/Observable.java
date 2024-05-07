@@ -3,30 +3,24 @@ package observer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Observable {
-    private List<Observer> observers; // List of observers.
+public interface Observable {
+    List<Observer> observers = new ArrayList<>(); // List of observers.
 
-    public Observable() {
-        observers = new ArrayList<>();
-    }
-
-
-    public void addObserver(Observer observer) {
+    default void addObserver(Observer observer) {
         observers.add(observer);
     }
 
-    public void removeObserver(Observer observer) {
+    default void removeObserver(Observer observer) {
         observers.remove(observer);
     }
 
-    public void notifyObservers() {
+    default void notifyObservers() {
         for (Observer observer : observers) {
             observer.update();
         }
     }
 
-    public interface Observer {
-
+    interface Observer {
         void update();
     }
 }

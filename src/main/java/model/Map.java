@@ -1,21 +1,18 @@
 package model;
 
+import observer.Observable;
+import observer.Observer;
+import util.Vector2D;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import observer.Observable;
-import util.Vector2D;
-
-public class Map {
+public class Map implements Observable {
     private Vector2D size;
     private List<Robot> robots;
     private List<Obstacle> obstacles;
 
-    public Map() {
-        this.size = new Vector2D(0, 0);
-        this.robots = new ArrayList<>();
-        this.obstacles = new ArrayList<>();
-    }
+
 
     public Map(double x, double y) {
         this.size = new Vector2D(x, y);
@@ -23,26 +20,21 @@ public class Map {
         this.obstacles = new ArrayList<>();
     }
 
-    public Map(Vector2D size) {
-        this.size = size;
-        this.robots = new ArrayList<>();
-        this.obstacles = new ArrayList<>();
-    }
 
     public void setSize(Vector2D size) {
         this.size = size;
     }
 
-    public void setSize(double x, double y) {
-        this.size = new Vector2D(x, y);
-    }
+
 
     public void setRobots(List<Robot> newRobots) {
         this.robots = newRobots;
+        notifyObservers(); // Notify observers when robots are updated
     }
 
     public void setObstacles(List<Obstacle> newObstacles) {
         this.obstacles = newObstacles;
+        notifyObservers(); // Notify observers when obstacles are updated
     }
 
     public List<Robot> getRobots() {
@@ -55,10 +47,12 @@ public class Map {
 
     public void addRobot(Robot newRobot) {
         robots.add(newRobot);
+        notifyObservers(); // Notify observers when a new robot is added
     }
 
     public void addObstacle(Obstacle newObstacle) {
         obstacles.add(newObstacle);
+        notifyObservers(); // Notify observers when a new obstacle is added
     }
 
     public Vector2D getSize() {
@@ -69,6 +63,7 @@ public class Map {
         for (Robot robot : robots) {
             if (robot.getPos().equals(oldPos)) {
                 robot.setPos(newPos);
+                notifyObservers(); // Notify observers when a robot is moved
                 return;
             }
         }
@@ -78,8 +73,11 @@ public class Map {
         for (Obstacle obstacle : obstacles) {
             if (obstacle.getPos().equals(oldPos)) {
                 obstacle.setPos(newPos);
+                notifyObservers(); // Notify observers when an obstacle is moved
                 return;
             }
         }
     }
+
+
 }

@@ -5,12 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6434aab6-9043-4002-b532-c44546afddc2" name="Changes" comment="editor, logs">
+      <change afterPath="$PROJECT_DIR$/src/main/java/observer/Observer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/SimulationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/SimulationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Map.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/model/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Robot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/model/RobotParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/RobotParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/observer/Observable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/observer/Observable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/util/Vector2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/Vector2D.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/EditorDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/EditorDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/EditorMapView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/EditorMapView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/MainWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/view/SimulationDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/SimulationDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/SimulationMapView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/SimulationMapView.java" afterDir="false" />
+    </list>
+    <list id="9fd5e9e5-938c-4cef-8ca7-01484ab40b9c" name="Changes by Marek" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Robot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Robot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +38,25 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/src/main/java/model/Robot.java">
+      <ranges>
+        <range start1="2" end1="2" start2="2" end2="5" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="3" end1="3" start2="6" end2="10" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="5" end1="5" start2="12" end2="14" changelist="9fd5e9e5-938c-4cef-8ca7-01484ab40b9c" />
+        <range start1="9" end1="9" start2="18" end2="20" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="10" end1="11" start2="21" end2="22" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="12" end1="16" start2="23" end2="24" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="18" end1="18" start2="26" end2="27" changelist="9fd5e9e5-938c-4cef-8ca7-01484ab40b9c" />
+        <range start1="23" end1="23" start2="32" end2="36" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="25" end1="25" start2="38" end2="56" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="57" end1="63" start2="88" end2="95" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="65" end1="67" start2="97" end2="243" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="68" end1="69" start2="244" end2="244" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+        <range start1="71" end1="72" start2="246" end2="246" changelist="6434aab6-9043-4002-b532-c44546afddc2" />
+      </ranges>
+    </file>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -40,26 +70,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Marek/Desktop/vut/ija/ija_projekt&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Marek/Desktop/vut/ija/ija_projekt",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
-        <option value="jdk-20.0.2-corretto-20.0.2.1-4caba194b151-5bc9ecd2" />
-      </set>
-    </attachedChunks>
-  </component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -69,6 +94,7 @@
       <option name="presentableId" value="Default" />
       <updated>1714246995773</updated>
       <workItem from="1714246996924" duration="4000" />
+      <workItem from="1715061958196" duration="5127000" />
     </task>
     <task id="LOCAL-00001" summary="view classes">
       <created>1714332431812</created>

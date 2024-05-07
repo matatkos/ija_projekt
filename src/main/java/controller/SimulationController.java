@@ -1,86 +1,76 @@
 package controller;
-
+import javafx.animation.AnimationTimer;
 import model.Map;
+import model.Obstacle;
 import view.SimulationMapView;
 import model.Robot;
 import util.Vector2D;
-
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 
 public class SimulationController {
     private Map map;
+
     private SimulationMapView mapView;
+
+    private AnimationTimer animationTimer;
     private boolean isRunning;
 
     public SimulationController(Map simulationMap, SimulationMapView simulationView) {
         this.map = simulationMap;
         this.mapView = simulationView;
+        this.animationTimer = createAnimationTimer();
+
     }
 
-    public void startSimulation() {
-        isRunning = true;
-        System.out.println("Simulation started");
+    public void setView(SimulationMapView view) {
+        this.mapView = view;
+    }
 
-        updateRobots();
+    private AnimationTimer createAnimationTimer() {
+        return new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                updateSimulation();
+            }
+        };
+    }
+
+
+
+    public void startSimulation() {
+
+        isRunning = true;
+        animationTimer.start();
+        System.out.println("Simulation started");
+        System.out.println("Map size: " + map.getSize().toString());
+
+        updateSimulation();
     }
 
     public void pauseSimulation() {
         isRunning = false;
+        animationTimer.stop();
         System.out.println("Simulation paused");
     }
 
-    public void resumeSimulation() {
-        isRunning = true;
-        System.out.println("Simulation resumed");
-        updateRobots();
-    }
 
-    private void updateRobots() {
-        if (!isRunning) {
-            return;
-        }
 
-        System.out.println("Updating robots...");
+    private void updateSimulation() {
         List<Robot> robots = map.getRobots();
+        List<Obstacle> obstacles = map.getObstacles();
+        Vector2D mapSize = map.getSize();
 
         if (robots.isEmpty()) {
-            System.out.println("Robots list is empty!");
+
             return;
         }
 
         for (Robot robot : robots) {
-            Vector2D newPos = robot.updatePos();
-            double mapWidth = map.getSize().getX();
-            double mapHeight = map.getSize().getY();
-
-            if (newPos.getX() < 0) {
-                newPos.setX(0);
-            }
-            if (newPos.getY() < 0) {
-                newPos.setY(0);
-            }
-            if (newPos.getX() > mapWidth) {
-                newPos.setX(mapWidth);
-            }
-            if (newPos.getY() > mapHeight) {
-                newPos.setY(mapHeight);
-            }
-
-            robot.setPos(newPos);
+            robot.update(obstacles, mapSize);
         }
 
+        // Update positions on the map view
         mapView.updateRobotPositions();
-
-        Timer timer = new Timer(33, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateRobots();
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
     }
 }

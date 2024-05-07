@@ -26,6 +26,12 @@ public class Vector2D {
         return y;
     }
 
+    public double distanceTo(Vector2D other) {
+        double dx = this.x - other.x;
+        double dy = this.y - other.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     public void setY(double y) {
         this.y = y;
     }
